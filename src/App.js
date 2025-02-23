@@ -2,15 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const initialCount = 9;
   const innerContainerRef = useRef(null);
 
-  // Load saved checkbox state from localStorage or default to all unchecked
+  // Load saved checkbox state from localStorage or default to an initial set
   const [checkboxes, setCheckboxes] = useState(() => {
     const savedCheckboxes = localStorage.getItem("checkboxes");
-    return savedCheckboxes
-      ? JSON.parse(savedCheckboxes)
-      : Array(initialCount).fill(false);
+    return savedCheckboxes ? JSON.parse(savedCheckboxes) : Array(9).fill(false);
   });
 
   // Save checkbox state to localStorage whenever checkboxes change
@@ -19,20 +16,21 @@ function App() {
   }, [checkboxes]);
 
   const handleWin = () => {
-    const newCheckboxes = [...checkboxes];
-    const nextIndex = newCheckboxes.findIndex((val) => val === false);
-    if (nextIndex !== -1) {
-      newCheckboxes[nextIndex] = true;
-      setCheckboxes(newCheckboxes);
-    }
+    setCheckboxes((prevCheckboxes) => {
+      const newCheckboxes = [...prevCheckboxes];
+      const nextIndex = newCheckboxes.findIndex((val) => val === false);
+      if (nextIndex !== -1) {
+        newCheckboxes[nextIndex] = true;
+      }
+      return newCheckboxes;
+    });
   };
 
   const handleLose = () => {
-    const newCheckboxes = [...checkboxes, false];
-    setCheckboxes(newCheckboxes);
+    setCheckboxes((prevCheckboxes) => [...prevCheckboxes, false]);
   };
 
-  // Auto-scroll to the bottom when checkboxes change
+  // Auto-scroll to the bottom when a new checkbox is added
   useEffect(() => {
     if (innerContainerRef.current) {
       innerContainerRef.current.scrollTop =
