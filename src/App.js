@@ -6,12 +6,6 @@ function App() {
   const [checkboxes, setCheckboxes] = useState(Array(initialCount).fill(false));
   const innerContainerRef = useRef(null);
 
-  const toggleCheck = (index) => {
-    const newCheckboxes = [...checkboxes];
-    newCheckboxes[index] = !newCheckboxes[index];
-    setCheckboxes(newCheckboxes);
-  };
-
   const handleWin = () => {
     const newCheckboxes = [...checkboxes];
     const nextIndex = newCheckboxes.findIndex((val) => val === false);
@@ -43,7 +37,7 @@ function App() {
               type="checkbox"
               className="big-checkbox"
               checked={isChecked}
-              onChange={() => toggleCheck(i)}
+              onClick={(e) => e.preventDefault()} // Prevent manual toggling
             />
           ))}
         </div>
