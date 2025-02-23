@@ -101,3 +101,46 @@ button:hover {
 .restart-button:hover {
   background-color: #5a6268;
 }
+
+/* Modal Input - Set fixed width for consistency */
+.modal-input {
+  width: 100px; /* Set a fixed width */
+  padding: 8px;
+  font-size: 16px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Align label and input in a row */
+.modal-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Space between label and input */
+  margin-top: 10px;
+}
+
+/* Labels - Set Fixed Width */
+.modal-row label {
+  width: 120px; /* Make both labels the same width */
+  text-align: right; /* Align text to the right for consistency */
+}
+
+/* Inputs - Set Fixed Width */
+.modal-input {
+  width: 100px; /* Ensure inputs match in length */
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.modal-button-row {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Space between buttons */
+}

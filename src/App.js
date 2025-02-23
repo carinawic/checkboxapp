@@ -82,8 +82,8 @@ function App() {
       <dialog ref={modalRef} className="popup-modal">
         <h2>Enter Your Ratings</h2>
 
-        {/* Current Rating - New Line */}
-        <div>
+        {/* Current Rating - Now Matches Goal Rating */}
+        <div className="modal-row">
           <label>Current Rating:</label>
           <input
             type="text"
@@ -96,8 +96,8 @@ function App() {
           />
         </div>
 
-        {/* Goal Rating - New Line */}
-        <div style={{ marginTop: "10px" }}>
+        {/* Goal Rating - Now Matches Current Rating */}
+        <div className="modal-row">
           <label>Goal Rating:</label>
           <input
             type="text"
@@ -110,8 +110,8 @@ function App() {
           />
         </div>
 
-        {/* Buttons moved to a new row */}
-        <div style={{ marginTop: "10px" }}>
+        {/* Buttons moved to a new row with spacing applied via CSS */}
+        <div className="modal-button-row">
           <button className="modal-button" onClick={handleModalSubmit}>
             OK
           </button>
