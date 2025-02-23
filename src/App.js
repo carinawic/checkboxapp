@@ -59,21 +59,41 @@ function App() {
   };
 
   const handleModalSubmit = () => {
-    if (/^\d{4}$/.test(currentInput) && /^\d{4}$/.test(goalInput)) {
-      setCurrentRating(currentInput);
-      setGoalRating(goalInput);
-      localStorage.setItem("currentRating", currentInput);
-      localStorage.setItem("goalRating", goalInput);
-      closeModal();
-    } else {
+    const current = parseInt(currentInput, 10);
+    const goal = parseInt(goalInput, 10);
+
+    if (!/^\d{4}$/.test(currentInput) || !/^\d{4}$/.test(goalInput)) {
       alert("Please enter valid 4-digit numbers for both fields.");
+      return;
     }
+
+    if (goal <= current) {
+      alert("Goal rating must be higher than current rating.");
+      return;
+    }
+
+    // Calculate the number of checkboxes
+    const numCheckboxes = Math.ceil((goal - current) / 10);
+
+    // Set checkboxes to all unchecked with new count
+    const newCheckboxes = Array(numCheckboxes).fill(false);
+
+    // Save values to state and localStorage
+    setCurrentRating(currentInput);
+    setGoalRating(goalInput);
+    setCheckboxes(newCheckboxes);
+
+    localStorage.setItem("currentRating", currentInput);
+    localStorage.setItem("goalRating", goalInput);
+    localStorage.setItem("checkboxes", JSON.stringify(newCheckboxes));
+
+    closeModal();
   };
 
   return (
     <div className="container">
       <div className="title-bar">
-        <h1>Checkbox Grid</h1>
+        <h1>Remaining Wins</h1>
         <button className="restart-button" onClick={openModal}>
           Restart
         </button>
@@ -82,7 +102,7 @@ function App() {
       <dialog ref={modalRef} className="popup-modal">
         <h2>Enter Your Ratings</h2>
 
-        {/* Current Rating - Now Matches Goal Rating */}
+        {/* Current Rating */}
         <div className="modal-row">
           <label>Current Rating:</label>
           <input
@@ -96,7 +116,7 @@ function App() {
           />
         </div>
 
-        {/* Goal Rating - Now Matches Current Rating */}
+        {/* Goal Rating */}
         <div className="modal-row">
           <label>Goal Rating:</label>
           <input
@@ -110,7 +130,7 @@ function App() {
           />
         </div>
 
-        {/* Buttons moved to a new row with spacing applied via CSS */}
+        {/* Buttons */}
         <div className="modal-button-row">
           <button className="modal-button" onClick={handleModalSubmit}>
             OK
