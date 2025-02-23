@@ -3,14 +3,25 @@ import "./App.css";
 
 function App() {
   const innerContainerRef = useRef(null);
+  const modalRef = useRef(null); // Reference for the <dialog> popup
 
-  // Load saved checkbox state from localStorage or default to an initial set
+  // Load checkboxes from localStorage or initialize with 9 unchecked
   const [checkboxes, setCheckboxes] = useState(() => {
     const savedCheckboxes = localStorage.getItem("checkboxes");
     return savedCheckboxes ? JSON.parse(savedCheckboxes) : Array(9).fill(false);
   });
 
-  // Save checkbox state to localStorage whenever checkboxes change
+  // Load saved ratings (if any)
+  const [currentRating, setCurrentRating] = useState(
+    () => localStorage.getItem("currentRating") || ""
+  );
+  const [goalRating, setGoalRating] = useState(
+    () => localStorage.getItem("goalRating") || ""
+  );
+
+  const [currentInput, setCurrentInput] = useState(currentRating); // Input for current rating
+  const [goalInput, setGoalInput] = useState(goalRating); // Input for goal rating
+
   useEffect(() => {
     localStorage.setItem("checkboxes", JSON.stringify(checkboxes));
   }, [checkboxes]);
@@ -30,7 +41,6 @@ function App() {
     setCheckboxes((prevCheckboxes) => [...prevCheckboxes, false]);
   };
 
-  // Auto-scroll to the bottom when a new checkbox is added
   useEffect(() => {
     if (innerContainerRef.current) {
       innerContainerRef.current.scrollTop =
@@ -38,9 +48,79 @@ function App() {
     }
   }, [checkboxes]);
 
+  const openModal = () => {
+    setCurrentInput(currentRating); // Reset input field to saved current rating
+    setGoalInput(goalRating); // Reset input field to saved goal rating
+    if (modalRef.current) modalRef.current.showModal();
+  };
+
+  const closeModal = () => {
+    if (modalRef.current) modalRef.current.close();
+  };
+
+  const handleModalSubmit = () => {
+    if (/^\d{4}$/.test(currentInput) && /^\d{4}$/.test(goalInput)) {
+      setCurrentRating(currentInput);
+      setGoalRating(goalInput);
+      localStorage.setItem("currentRating", currentInput);
+      localStorage.setItem("goalRating", goalInput);
+      closeModal();
+    } else {
+      alert("Please enter valid 4-digit numbers for both fields.");
+    }
+  };
+
   return (
     <div className="container">
-      <h1>Checkbox Grid</h1>
+      <div className="title-bar">
+        <h1>Checkbox Grid</h1>
+        <button className="restart-button" onClick={openModal}>
+          Restart
+        </button>
+      </div>
+
+      <dialog ref={modalRef} className="popup-modal">
+        <h2>Enter Your Ratings</h2>
+
+        {/* Current Rating - New Line */}
+        <div>
+          <label>Current Rating:</label>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            className="modal-input"
+            value={currentInput}
+            onChange={(e) => setCurrentInput(e.target.value)}
+            placeholder="4-digit number"
+          />
+        </div>
+
+        {/* Goal Rating - New Line */}
+        <div style={{ marginTop: "10px" }}>
+          <label>Goal Rating:</label>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            className="modal-input"
+            value={goalInput}
+            onChange={(e) => setGoalInput(e.target.value)}
+            placeholder="4-digit number"
+          />
+        </div>
+
+        {/* Buttons moved to a new row */}
+        <div style={{ marginTop: "10px" }}>
+          <button className="modal-button" onClick={handleModalSubmit}>
+            OK
+          </button>
+          <button className="modal-button cancel" onClick={closeModal}>
+            Cancel
+          </button>
+        </div>
+      </dialog>
+
       <div className="inner-container" ref={innerContainerRef}>
         <div className="grid">
           {checkboxes.map((isChecked, i) => (
@@ -49,7 +129,7 @@ function App() {
               type="checkbox"
               className="big-checkbox"
               checked={isChecked}
-              onClick={(e) => e.preventDefault()} // Prevent manual toggling
+              onClick={(e) => e.preventDefault()}
             />
           ))}
         </div>
