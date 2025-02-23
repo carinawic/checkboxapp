@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/checkboxapp/static/css/main.894c6060.css",
-    "main.js": "/checkboxapp/static/js/main.9d2efde2.js",
+    "main.js": "/checkboxapp/static/js/main.b54ab6e8.js",
     "static/js/488.0ebfe15f.chunk.js": "/checkboxapp/static/js/488.0ebfe15f.chunk.js",
     "service-worker.js": "/checkboxapp/service-worker.js",
     "index.html": "/checkboxapp/index.html",
     "main.894c6060.css.map": "/checkboxapp/static/css/main.894c6060.css.map",
-    "main.9d2efde2.js.map": "/checkboxapp/static/js/main.9d2efde2.js.map",
+    "main.b54ab6e8.js.map": "/checkboxapp/static/js/main.b54ab6e8.js.map",
     "488.0ebfe15f.chunk.js.map": "/checkboxapp/static/js/488.0ebfe15f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.894c6060.css",
-    "static/js/main.9d2efde2.js"
+    "static/js/main.b54ab6e8.js"
   ]
 }
