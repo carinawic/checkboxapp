@@ -3,41 +3,20 @@ import "./App.css";
 
 function App() {
   const initialCount = 9;
-  const [checkboxes, setCheckboxes] = useState(Array(initialCount).fill(false));
   const innerContainerRef = useRef(null);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
+  // Load saved checkbox state from localStorage or default to all unchecked
+  const [checkboxes, setCheckboxes] = useState(() => {
+    const savedCheckboxes = localStorage.getItem("checkboxes");
+    return savedCheckboxes
+      ? JSON.parse(savedCheckboxes)
+      : Array(initialCount).fill(false);
+  });
+
+  // Save checkbox state to localStorage whenever checkboxes change
   useEffect(() => {
-    const beforeInstallPromptHandler = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowInstallPrompt(true);
-    };
-
-    window.addEventListener("beforeinstallprompt", beforeInstallPromptHandler);
-
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        beforeInstallPromptHandler
-      );
-    };
-  }, []);
-
-  const handleInstall = () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choice) => {
-        if (choice.outcome === "accepted") {
-          console.log("User installed the PWA");
-        } else {
-          console.log("User dismissed the install prompt");
-        }
-        setShowInstallPrompt(false);
-      });
-    }
-  };
+    localStorage.setItem("checkboxes", JSON.stringify(checkboxes));
+  }, [checkboxes]);
 
   const handleWin = () => {
     const newCheckboxes = [...checkboxes];
@@ -49,9 +28,11 @@ function App() {
   };
 
   const handleLose = () => {
-    setCheckboxes([...checkboxes, false]);
+    const newCheckboxes = [...checkboxes, false];
+    setCheckboxes(newCheckboxes);
   };
 
+  // Auto-scroll to the bottom when checkboxes change
   useEffect(() => {
     if (innerContainerRef.current) {
       innerContainerRef.current.scrollTop =
@@ -62,12 +43,6 @@ function App() {
   return (
     <div className="container">
       <h1>Checkbox Grid</h1>
-      {showInstallPrompt && (
-        <div className="install-banner">
-          <p>Install this app for a better experience!</p>
-          <button onClick={handleInstall}>Download App</button>
-        </div>
-      )}
       <div className="inner-container" ref={innerContainerRef}>
         <div className="grid">
           {checkboxes.map((isChecked, i) => (
