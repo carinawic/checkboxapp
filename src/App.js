@@ -18,6 +18,9 @@ function App() {
   const [goalRating, setGoalRating] = useState(
     () => localStorage.getItem("goalRating") || ""
   );
+  const [kFactor, setKFactor] = useState(
+    () => parseInt(localStorage.getItem("kFactor"), 10) || 20
+  );
 
   const [currentInput, setCurrentInput] = useState(currentRating); // Input for current rating
   const [goalInput, setGoalInput] = useState(goalRating); // Input for goal rating
@@ -73,7 +76,7 @@ function App() {
     }
 
     // Calculate the number of checkboxes
-    const numCheckboxes = Math.ceil((goal - current) / 10);
+    const numCheckboxes = Math.ceil((goal - current) / (kFactor / 2));
 
     // Set checkboxes to all unchecked with new count
     const newCheckboxes = Array(numCheckboxes).fill(false);
@@ -86,6 +89,7 @@ function App() {
     localStorage.setItem("currentRating", currentInput);
     localStorage.setItem("goalRating", goalInput);
     localStorage.setItem("checkboxes", JSON.stringify(newCheckboxes));
+    localStorage.setItem("kFactor", kFactor);
 
     closeModal();
   };
@@ -128,6 +132,19 @@ function App() {
             onChange={(e) => setGoalInput(e.target.value)}
             placeholder="4-digit number"
           />
+        </div>
+        {/* K-Factor */}
+        <div className="modal-row">
+          <label>K-Factor:</label>
+          <select
+            className="modal-input"
+            value={kFactor}
+            onChange={(e) => setKFactor(parseInt(e.target.value, 10))}
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+          </select>
         </div>
 
         {/* Buttons */}
